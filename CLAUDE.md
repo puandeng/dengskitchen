@@ -55,6 +55,14 @@ docusaurus.config.js      — Site config, navbar, footer
 - Image generation uses Pollinations.ai URL pattern: `https://image.pollinations.ai/prompt/{encoded_prompt}`
 - Recipe brainstorming uses Pollinations.ai text endpoint: `https://text.pollinations.ai/{encoded_prompt}`
 
+## Planning (plan.md)
+
+- All planned work lives in `plan.md`
+- Every item must be a markdown checklist entry: `- [ ]` when pending, `- [x]` when completed
+- When adding new items, always use unchecked `- [ ]` format
+- When work on an item is finished, mark it as `- [x]`
+- Group related items under a descriptive heading
+
 ## Conventions
 
 - Inline styles are used in Menu Atelier rather than CSS modules for self-containment
