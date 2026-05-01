@@ -12,7 +12,6 @@ Aaron Deng's personal website — a multi-purpose Docusaurus site hosted on GitH
 
 - **`main` is protected** — no direct pushes allowed
 - **All changes go through pull requests** — squash-and-merge only
-- **PRs require review** before merging
 - Always create feature branches from `main`, never commit directly to `main`
 - Keep PR scope focused — one feature or fix per PR
 
