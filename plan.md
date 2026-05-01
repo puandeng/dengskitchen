@@ -1,8 +1,28 @@
-# Plan — Menu Atelier: Collaborative Tasting Menu Designer
+# Plan — Aaron's Culinary Website
 
 ## Vision
 
-A web-based tool where chefs, food enthusiasts, and culinary teams can collaboratively design tasting menus in real time — brainstorm recipes, manage courses, and generate AI-powered dish images.
+A personal culinary website where Aaron can design tasting menus collaboratively, blog about food experiences, and share restaurant reviews — all centered around a passion for cooking and dining.
+
+## Priority: Site Redesign
+
+### Rebrand from K-Drama to Culinary Focus
+
+- [ ] Rework the homepage to be focused on culinary experiences instead of K-Drama content
+- [ ] Remove all drama-related elements (K-Drama landing, watched dramas docs, drama-themed branding)
+- [ ] Redesign the homepage as a culinary-focused landing page
+- [ ] Update site title, tagline, and favicon to reflect the culinary theme
+- [ ] Rework the footer — replace "Follow me :)" section with an Instagram link to Aaron's cooking channel
+- [ ] Remove MyDramaList, Discord, and Twitter links from the footer
+- [ ] Update navbar to reflect the three main sections: Menu Atelier, Blog, Restaurant Reviews
+
+### Menu Atelier — Grocery List Feature
+
+- [ ] Add a "Groceries" section to the menu editor
+- [ ] Allow users to add ingredients from any course into the grocery list
+- [ ] Show grocery list as a checklist — users can mark items as bought
+- [ ] Allow users to delete items once they have been purchased
+- [ ] Sync the grocery list across collaborators via Yjs
 
 ## Completed (v1)
 
