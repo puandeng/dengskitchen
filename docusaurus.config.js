@@ -6,8 +6,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'My Site',
-  tagline: 'Dinosaurs are cool',
+  title: 'Crash Landing on K-Drama',
+  tagline: 'Weekly Dose of Rom-Com',
   url: 'http://crashlandingonkdrama.com',
   baseUrl: '/',
   onBrokenLinks: 'throw',
@@ -36,17 +36,9 @@ const config = {
       ({
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
         },
         blog: {
           showReadingTime: true,
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -59,7 +51,7 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: 'My Site',
+        title: 'Dramas',
         logo: {
           alt: 'My Site Logo',
           src: 'img/logo.svg',
@@ -67,13 +59,14 @@ const config = {
         items: [
           {
             type: 'doc',
-            docId: 'intro',
+            docId: 'watched_dramas2023',
             position: 'left',
             label: 'Tutorial',
           },
           {to: '/blog', label: 'Blog', position: 'left'},
+          {to: '/tasting-menu', label: '🍽️ Menu Atelier', position: 'left'},
           {
-            href: 'https://github.com/facebook/docusaurus',
+            href: 'https://github.com/puandeng',
             label: 'GitHub',
             position: 'right',
           },
@@ -83,46 +76,42 @@ const config = {
         style: 'dark',
         links: [
           {
-            title: 'Docs',
+            title: 'Watched',
             items: [
               {
-                label: 'Tutorial',
-                to: '/docs/intro',
+                label: '2023',
+                to: '/docs/watched_dramas2023/',
               },
             ],
           },
           {
-            title: 'Community',
+            title: 'Follow me :)',
             items: [
               {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+                label: 'MyDramaList',
+                href: 'https://mydramalist.com/profile/swimmathster/',
               },
               {
                 label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
+                href: 'https://discordapp.com/invite/docusaurus/',
               },
               {
                 label: 'Twitter',
-                href: 'https://twitter.com/docusaurus',
+                href: 'https://twitter.com/docusaurus/',
               },
             ],
           },
           {
-            title: 'More',
+            title: 'Weekly Blog',
             items: [
               {
                 label: 'Blog',
                 to: '/blog',
               },
-              {
-                label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
-              },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Aaron Deng. Built with Docusaurus.`,
       },
       prism: {
         theme: lightCodeTheme,
