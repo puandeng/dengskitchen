@@ -24,6 +24,14 @@ A personal culinary website where Aaron can design tasting menus collaboratively
 - [ ] Allow users to delete items once they have been purchased
 - [ ] Sync the grocery list across collaborators via Yjs
 
+### Color Theme Overhaul
+
+- [ ] **Light mode — "Warm Spring"**: Soft pastels, warm greens, gentle florals — think cherry blossoms, fresh herbs, morning farmers market. Cream/linen backgrounds, sage and blush accents, warm gold highlights
+- [ ] **Dark mode — "Summer Nights"**: Deep navy/indigo sky, warm amber and candlelight tones — think rooftop dining, string lights, twilight. Rich dark blues, soft orange/copper accents, warm star-white text
+- [ ] Apply theme consistently across all pages (homepage, Menu Atelier, blog, restaurant reviews)
+- [ ] Update Menu Atelier's inline color palette to inherit from the site-wide theme
+- [ ] Ensure smooth transition between light and dark modes
+
 ## Completed (v1)
 
 - [x] Landing page with Create / Join room flow
