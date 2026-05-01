@@ -2,7 +2,19 @@
 
 ## Project Overview
 
-This is a Docusaurus 2 site hosted on GitHub Pages at `puandeng.github.io`. It combines a K-Drama blog/wiki with **Menu Atelier**, a collaborative tasting menu design tool.
+Aaron Deng's personal website — a multi-purpose Docusaurus site hosted on GitHub Pages. The site has three main sections:
+
+1. **Menu Atelier** (`/tasting-menu`) — Collaborative tasting menu designer with real-time sync, AI recipe brainstorming, and dish image generation
+2. **Blog** (`/blog`) — Personal blogging space for posting thoughts throughout the year
+3. **Restaurant Reviews** — (Planned) A dedicated page for sharing restaurant reviews and dining experiences
+
+## Branch Rules
+
+- **`main` is protected** — no direct pushes allowed
+- **All changes go through pull requests** — squash-and-merge only
+- **PRs require review** before merging
+- Always create feature branches from `main`, never commit directly to `main`
+- Keep PR scope focused — one feature or fix per PR
 
 ## Tech Stack
 
@@ -23,14 +35,14 @@ This is a Docusaurus 2 site hosted on GitHub Pages at `puandeng.github.io`. It c
 ```
 src/
   pages/
-    index.js              — Homepage (K-Drama landing)
+    index.js              — Homepage / landing page
     tasting-menu.js       — Menu Atelier (collaborative tasting menu designer)
   components/
     HomepageFeatures/     — Homepage feature cards
   css/
     custom.css            — Global theme overrides
-docs/                     — Docusaurus docs (watched dramas)
-blog/                     — Blog posts
+blog/                     — Blog posts (markdown files)
+docs/                     — Docusaurus docs section
 static/                   — Static assets (images, favicon)
 docusaurus.config.js      — Site config, navbar, footer
 ```
@@ -49,3 +61,4 @@ docusaurus.config.js      — Site config, navbar, footer
 - Inline styles are used in Menu Atelier rather than CSS modules for self-containment
 - Room codes follow the pattern `{adjective}-{ingredient}-{3-digit-number}` (e.g. `crispy-truffle-423`)
 - Color palette for Menu Atelier: warm cream background (#f7f3ee), terracotta accent (#b85c38), sage green (#3d6b4f)
+- Blog posts go in `blog/` as markdown files with frontmatter (date, title, tags)
