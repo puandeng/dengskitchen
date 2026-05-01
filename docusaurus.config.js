@@ -64,6 +64,7 @@ const config = {
             label: 'Tutorial',
           },
           {to: '/blog', label: 'Blog', position: 'left'},
+          {to: '/tasting-menu', label: '🍽️ Menu Atelier', position: 'left'},
           {
             href: 'https://github.com/puandeng',
             label: 'GitHub',
