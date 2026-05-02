@@ -8,29 +8,29 @@ A personal culinary website where Aaron can design tasting menus collaboratively
 
 ### Rebrand from K-Drama to Culinary Focus
 
-- [ ] Rework the homepage to be focused on culinary experiences instead of K-Drama content
-- [ ] Remove all drama-related elements (K-Drama landing, watched dramas docs, drama-themed branding)
-- [ ] Redesign the homepage as a culinary-focused landing page
-- [ ] Update site title, tagline, and favicon to reflect the culinary theme
-- [ ] Rework the footer — replace "Follow me :)" section with an Instagram link to Aaron's cooking channel
-- [ ] Remove MyDramaList, Discord, and Twitter links from the footer
-- [ ] Update navbar to reflect the three main sections: Menu Atelier, Blog, Restaurant Reviews
+- [x] Rework the homepage to be focused on culinary experiences instead of K-Drama content
+- [x] Remove all drama-related elements (K-Drama landing, watched dramas docs, drama-themed branding)
+- [x] Redesign the homepage as a culinary-focused landing page
+- [x] Update site title, tagline, and favicon to reflect the culinary theme
+- [x] Rework the footer — replace "Follow me :)" section with an Instagram link to Aaron's cooking channel
+- [x] Remove MyDramaList, Discord, and Twitter links from the footer
+- [x] Update navbar to reflect the three main sections: Menu Atelier, Blog, Restaurant Reviews
 
 ### Menu Atelier — Grocery List Feature
 
-- [ ] Add a "Groceries" section to the menu editor
-- [ ] Allow users to add ingredients from any course into the grocery list
-- [ ] Show grocery list as a checklist — users can mark items as bought
-- [ ] Allow users to delete items once they have been purchased
-- [ ] Sync the grocery list across collaborators via Yjs
+- [x] Add a "Groceries" section to the menu editor
+- [x] Allow users to add ingredients from any course into the grocery list
+- [x] Show grocery list as a checklist — users can mark items as bought
+- [x] Allow users to delete items once they have been purchased
+- [x] Sync the grocery list across collaborators via Yjs
 
 ### Color Theme Overhaul
 
-- [ ] **Light mode — "Warm Spring"**: Soft pastels, warm greens, gentle florals — think cherry blossoms, fresh herbs, morning farmers market. Cream/linen backgrounds, sage and blush accents, warm gold highlights
-- [ ] **Dark mode — "Summer Nights"**: Deep navy/indigo sky, warm amber and candlelight tones — think rooftop dining, string lights, twilight. Rich dark blues, soft orange/copper accents, warm star-white text
-- [ ] Apply theme consistently across all pages (homepage, Menu Atelier, blog, restaurant reviews)
-- [ ] Update Menu Atelier's inline color palette to inherit from the site-wide theme
-- [ ] Ensure smooth transition between light and dark modes
+- [x] **Light mode — "Warm Spring"**: Soft pastels, warm greens, gentle florals — think cherry blossoms, fresh herbs, morning farmers market. Cream/linen backgrounds, sage and blush accents, warm gold highlights
+- [x] **Dark mode — "Summer Nights"**: Deep navy/indigo sky, warm amber and candlelight tones — think rooftop dining, string lights, twilight. Rich dark blues, soft orange/copper accents, warm star-white text
+- [x] Apply theme consistently across all pages (homepage, Menu Atelier, blog, restaurant reviews)
+- [x] Update Menu Atelier's inline color palette to inherit from the site-wide theme
+- [x] Ensure smooth transition between light and dark modes
 
 ## Completed (v1)
 
@@ -54,7 +54,7 @@ A personal culinary website where Aaron can design tasting menus collaboratively
 - [ ] Export menu as JSON for saving/loading
 - [ ] Drag-and-drop course reordering
 - [ ] Course type presets (amuse-bouche, appetizer, intermezzo, main, dessert, mignardise)
-- [ ] Dark mode support
+- [x] Dark mode support
 
 ### Medium-term
 

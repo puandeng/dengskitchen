@@ -3,22 +3,46 @@ import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
-import HomepageFeatures from '@site/src/components/HomepageFeatures';
-
 import styles from './index.module.css';
+
+const features = [
+  {
+    emoji: '🍽️',
+    title: 'Menu Atelier',
+    description: 'Design tasting menus collaboratively in real time. Brainstorm recipes with AI and generate beautiful dish images.',
+    link: '/tasting-menu',
+    linkText: 'Start Creating',
+  },
+  {
+    emoji: '📝',
+    title: 'Food Journal',
+    description: 'Thoughts on cooking, ingredients, techniques, and the stories behind every dish throughout the year.',
+    link: '/blog',
+    linkText: 'Read the Blog',
+  },
+  {
+    emoji: '⭐',
+    title: 'Restaurant Reviews',
+    description: 'Honest reviews and recommendations from dining experiences — from hidden gems to fine dining.',
+    link: '#',
+    linkText: 'Coming Soon',
+  },
+];
 
 function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
   return (
-    <header className={clsx('hero hero--primary', styles.heroBanner)}>
-      <div className="container">
-        <h1 className="hero__title">{siteConfig.title}</h1>
-        <p className="hero__subtitle">{siteConfig.tagline}</p>
-        <div className={styles.buttons}>
-          <Link
-            className="button button--secondary button--lg"
-            to="/docs/lawless_lawyer">
-            Kdasldjf
+    <header className={styles.hero}>
+      <div className={styles.heroInner}>
+        <span className={styles.heroEmoji}>👨‍🍳</span>
+        <h1 className={styles.heroTitle}>{siteConfig.title}</h1>
+        <p className={styles.heroSubtitle}>{siteConfig.tagline}</p>
+        <div className={styles.heroButtons}>
+          <Link className={styles.heroPrimary} to="/tasting-menu">
+            🍽️ Design a Menu
+          </Link>
+          <Link className={styles.heroSecondary} to="/blog">
+            📝 Read the Blog
           </Link>
         </div>
       </div>
@@ -26,15 +50,30 @@ function HomepageHeader() {
   );
 }
 
+function FeatureCard({emoji, title, description, link, linkText}) {
+  return (
+    <div className={styles.featureCard}>
+      <div className={styles.featureEmoji}>{emoji}</div>
+      <h3 className={styles.featureTitle}>{title}</h3>
+      <p className={styles.featureDesc}>{description}</p>
+      <Link className={styles.featureLink} to={link}>{linkText} →</Link>
+    </div>
+  );
+}
+
 export default function Home() {
   const {siteConfig} = useDocusaurusContext();
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />">
+      title="Home"
+      description={siteConfig.tagline}>
       <HomepageHeader />
-      <main>
-        <HomepageFeatures />
+      <main className={styles.main}>
+        <section className={styles.features}>
+          {features.map((f, i) => (
+            <FeatureCard key={i} {...f} />
+          ))}
+        </section>
       </main>
     </Layout>
   );

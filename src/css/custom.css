@@ -1,30 +1,104 @@
-/**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
- */
-
-/* You can override the default Infima variables here. */
+/* ─── Warm Spring (Light Mode) ──────────────────────────────────────────────── */
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
+  --ifm-color-primary: #6b8f5e;
+  --ifm-color-primary-dark: #5e7f52;
+  --ifm-color-primary-darker: #58774d;
+  --ifm-color-primary-darkest: #48623f;
+  --ifm-color-primary-light: #7a9e6d;
+  --ifm-color-primary-lighter: #82a576;
+  --ifm-color-primary-lightest: #99b78f;
+
+  --ifm-background-color: #faf8f3;
+  --ifm-background-surface-color: #ffffff;
+  --ifm-navbar-background-color: #faf8f3ee;
+  --ifm-footer-background-color: #3d4a35;
+
+  --ifm-font-color-base: #2c1810;
+  --ifm-heading-color: #2c1810;
+  --ifm-link-color: #6b8f5e;
   --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+
+  --site-hero-bg: linear-gradient(135deg, #f5efe6 0%, #e8ddd0 30%, #d4e6c8 70%, #f0e8d8 100%);
+  --site-hero-text: #2c1810;
+  --site-hero-subtitle: #5a4a3a;
+  --site-card-bg: #ffffff;
+  --site-card-border: #e5d9cc;
+  --site-card-shadow: 0 2px 12px rgba(107, 85, 60, 0.08);
+  --site-accent: #b85c38;
+  --site-accent-light: #fdf0eb;
+  --site-green: #6b8f5e;
+  --site-green-light: #eaf2e6;
+  --site-gold: #c49b3c;
+  --site-gold-light: #fdf6e3;
+  --site-blush: #d4917a;
+  --site-blush-light: #fdf0eb;
+  --site-muted: #7a6655;
+  --site-border: #e5d9cc;
+  --site-warm-bg: #f7f3ee;
+
+  --docusaurus-highlighted-code-line-bg: rgba(107, 143, 94, 0.1);
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
+/* ─── Summer Nights (Dark Mode) ─────────────────────────────────────────────── */
 [data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --ifm-color-primary: #e8a87c;
+  --ifm-color-primary-dark: #e4976a;
+  --ifm-color-primary-darker: #e18e5e;
+  --ifm-color-primary-darkest: #d97338;
+  --ifm-color-primary-light: #ecb98e;
+  --ifm-color-primary-lighter: #eec09a;
+  --ifm-color-primary-lightest: #f5d8bf;
+
+  --ifm-background-color: #0f1729;
+  --ifm-background-surface-color: #1a2340;
+  --ifm-navbar-background-color: #0f1729ee;
+  --ifm-footer-background-color: #0a0f1e;
+
+  --ifm-font-color-base: #e8e0d4;
+  --ifm-heading-color: #f5efe6;
+  --ifm-link-color: #e8a87c;
+
+  --site-hero-bg: linear-gradient(135deg, #0f1729 0%, #1a2340 30%, #1e2a4a 70%, #15203a 100%);
+  --site-hero-text: #f5efe6;
+  --site-hero-subtitle: #b8a898;
+  --site-card-bg: #1a2340;
+  --site-card-border: #2a3558;
+  --site-card-shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
+  --site-accent: #e8a87c;
+  --site-accent-light: #2a2035;
+  --site-green: #7cb88a;
+  --site-green-light: #1a2a20;
+  --site-gold: #e8c86c;
+  --site-gold-light: #2a2518;
+  --site-blush: #d4917a;
+  --site-blush-light: #2a1e1a;
+  --site-muted: #8a7e72;
+  --site-border: #2a3558;
+  --site-warm-bg: #141d35;
+
+  --docusaurus-highlighted-code-line-bg: rgba(232, 168, 124, 0.15);
+}
+
+/* ─── Global Styles ─────────────────────────────────────────────────────────── */
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar {
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+  transition: background-color 0.3s ease;
+}
+
+.navbar__title {
+  font-family: 'Georgia', serif;
+  font-weight: 700;
+}
+
+.footer {
+  transition: background-color 0.3s ease;
+}
+
+.footer__title {
+  font-family: 'Georgia', serif;
 }
