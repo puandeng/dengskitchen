@@ -45,6 +45,31 @@ A personal culinary website where Aaron can design tasting menus collaboratively
 - [x] Collaborator count indicator
 - [x] Navbar integration
 
+## Priority: Next Up
+
+### Bug Fixes
+
+- [ ] Fix AI image generation — images are not generating from dish descriptions
+- [ ] Fix AI recipe brainstorming — suggestions are not being returned
+
+### Menu Atelier — Save & Load Menus Locally
+
+- [ ] Allow the user to save the current menu to localStorage
+- [ ] Add a "Saved Menus" tab in the Menu Atelier landing page
+- [ ] Allow users to switch back and forth between saved menus and the live editor
+- [ ] Show saved menu name, date, and course count in the saved menus list
+
+### Ingredients Database
+
+- [ ] Build an ingredients autocomplete database from previously used ingredients
+- [ ] Store ingredient history in localStorage so it persists across sessions
+- [ ] Show autocomplete suggestions when typing in the ingredients tag input
+
+### Quick Fixes
+
+- [ ] Rename "Aaron's Kitchen" to "Deng's Kitchen" across the site (title, navbar, homepage)
+- [ ] Change copyright text from "Crafted with love and Docusaurus" to "Crafted with Food and Docusaurus"
+
 ## Planned Enhancements
 
 ### Near-term
