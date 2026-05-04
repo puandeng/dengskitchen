@@ -5,7 +5,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "Aaron's Kitchen",
+  title: "Deng's Kitchen",
   tagline: 'Crafting Culinary Experiences',
   url: 'https://aarondeng.com',
   baseUrl: '/',
@@ -32,7 +32,7 @@ const config = {
         blog: {
           showReadingTime: true,
           blogTitle: 'Food Journal',
-          blogDescription: "Aaron's thoughts on food, cooking, and dining",
+          blogDescription: "Thoughts on food, cooking, and dining",
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -45,7 +45,7 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: "Aaron's Kitchen",
+        title: "Deng's Kitchen",
         items: [
           {to: '/tasting-menu', label: '🍽️ Menu Atelier', position: 'left'},
           {to: '/blog', label: '📝 Blog', position: 'left'},
@@ -91,7 +91,7 @@ const config = {
             ],
           },
         ],
-        copyright: `© ${new Date().getFullYear()} Aaron Deng. Crafted with love and Docusaurus.`,
+        copyright: `© ${new Date().getFullYear()} Aaron Deng. Crafted with Food and Docusaurus.`,
       },
       prism: {
         theme: lightCodeTheme,

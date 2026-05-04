@@ -49,26 +49,26 @@ A personal culinary website where Aaron can design tasting menus collaboratively
 
 ### Bug Fixes
 
-- [ ] Fix AI image generation — images are not generating from dish descriptions
-- [ ] Fix AI recipe brainstorming — suggestions are not being returned
+- [x] Fix AI image generation — switched to POST with `model=flux`, added loading state
+- [x] Fix AI recipe brainstorming — switched to POST endpoint for reliable long prompts
 
 ### Menu Atelier — Save & Load Menus Locally
 
-- [ ] Allow the user to save the current menu to localStorage
-- [ ] Add a "Saved Menus" tab in the Menu Atelier landing page
-- [ ] Allow users to switch back and forth between saved menus and the live editor
-- [ ] Show saved menu name, date, and course count in the saved menus list
+- [x] Allow the user to save the current menu to localStorage
+- [x] Add a "Saved Menus" tab in the Menu Atelier landing page
+- [x] Allow users to switch back and forth between saved menus and the live editor
+- [x] Show saved menu name, date, and course count in the saved menus list
 
 ### Ingredients Database
 
-- [ ] Build an ingredients autocomplete database from previously used ingredients
-- [ ] Store ingredient history in localStorage so it persists across sessions
-- [ ] Show autocomplete suggestions when typing in the ingredients tag input
+- [x] Build an ingredients autocomplete database from previously used ingredients
+- [x] Store ingredient history in localStorage so it persists across sessions
+- [x] Show autocomplete suggestions when typing in the ingredients tag input
 
 ### Quick Fixes
 
-- [ ] Rename "Aaron's Kitchen" to "Deng's Kitchen" across the site (title, navbar, homepage)
-- [ ] Change copyright text from "Crafted with love and Docusaurus" to "Crafted with Food and Docusaurus"
+- [x] Rename "Aaron's Kitchen" to "Deng's Kitchen" across the site (title, navbar, homepage)
+- [x] Change copyright text from "Crafted with love and Docusaurus" to "Crafted with Food and Docusaurus"
 
 ## Planned Enhancements
 

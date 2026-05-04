@@ -70,20 +70,102 @@ function useThemeColors() {
   return colors;
 }
 
-// ─── Pollinations API ─────────────────────────────────────────────────────────
+// ─── Ingredients Database (localStorage) ─────────────────────────────────────
+
+const INGREDIENTS_DB_KEY = 'menu-atelier-ingredients-db';
+
+function loadIngredientsDb() {
+  try {
+    return JSON.parse(localStorage.getItem(INGREDIENTS_DB_KEY) || '[]');
+  } catch { return []; }
+}
+
+function saveIngredientToDb(ingredient) {
+  const db = loadIngredientsDb();
+  const lower = ingredient.toLowerCase().trim();
+  if (!lower) return;
+  const existing = db.find(i => i.toLowerCase() === lower);
+  if (!existing) {
+    db.push(ingredient.trim());
+    db.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+    localStorage.setItem(INGREDIENTS_DB_KEY, JSON.stringify(db));
+  }
+}
+
+function saveIngredientsToDb(ingredients) {
+  ingredients.forEach(i => saveIngredientToDb(i));
+}
+
+// ─── Saved Menus (localStorage) ──────────────────────────────────────────────
+
+const SAVED_MENUS_KEY = 'menu-atelier-saved-menus';
+
+function loadSavedMenus() {
+  try {
+    return JSON.parse(localStorage.getItem(SAVED_MENUS_KEY) || '[]');
+  } catch { return []; }
+}
+
+function saveMenuToStorage(menuData) {
+  const menus = loadSavedMenus();
+  const entry = {
+    id: menuData.id || genId(),
+    name: menuData.menuName || 'Untitled Menu',
+    theme: menuData.menuTheme || '',
+    courses: menuData.courses,
+    groceries: menuData.groceries || [],
+    savedAt: new Date().toISOString(),
+    courseCount: menuData.courses.length,
+  };
+  const idx = menus.findIndex(m => m.id === entry.id);
+  if (idx >= 0) menus[idx] = entry;
+  else menus.unshift(entry);
+  localStorage.setItem(SAVED_MENUS_KEY, JSON.stringify(menus));
+  return entry.id;
+}
+
+function deleteSavedMenu(id) {
+  const menus = loadSavedMenus().filter(m => m.id !== id);
+  localStorage.setItem(SAVED_MENUS_KEY, JSON.stringify(menus));
+}
+
+// ─── Pollinations API (fixed) ────────────────────────────────────────────────
 
 function buildImageUrl(prompt, seed) {
-  const full = `Professional fine dining food photography, michelin star restaurant, artistic plating, shallow depth of field, ${prompt}`;
-  return `https://image.pollinations.ai/prompt/${encodeURIComponent(full)}?width=600&height=450&nologo=true&seed=${seed}`;
+  const full = `Professional fine dining food photography of ${prompt}, michelin star restaurant, artistic plating, shallow depth of field, elegant presentation, studio lighting`;
+  return `https://image.pollinations.ai/prompt/${encodeURIComponent(full)}?width=600&height=450&nologo=true&seed=${seed}&model=flux`;
 }
 
 async function fetchBrainstorm(courseName, dishName, description) {
-  const prompt = `You are a creative Michelin-star chef consultant. Brainstorm ideas for this tasting menu course:\n\nCourse: ${courseName}\nDish: ${dishName || '(untitled)'}\nDescription: ${description || '(no description yet)'}\n\nProvide concise, inspiring suggestions for:\n• Key ingredients & sourcing\n• Cooking techniques\n• Flavor pairings & balance\n• Plating & garnish\n• Wine or beverage pairing\n\nKeep each point brief and exciting.`;
+  const userMessage = `You are a creative Michelin-star chef consultant. Brainstorm ideas for this tasting menu course:
+
+Course: ${courseName}
+Dish: ${dishName || '(untitled)'}
+Description: ${description || '(no description yet)'}
+
+Provide concise, inspiring suggestions for:
+- Key ingredients & sourcing
+- Cooking techniques
+- Flavor pairings & balance
+- Plating & garnish
+- Wine or beverage pairing
+
+Keep each point brief and exciting.`;
+
   try {
-    const res = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}`);
-    if (!res.ok) throw new Error('Network error');
+    // Use POST endpoint for reliability with long prompts
+    const res = await fetch('https://text.pollinations.ai/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: [{ role: 'user', content: userMessage }],
+        model: 'openai',
+      }),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return await res.text();
-  } catch {
+  } catch (err) {
+    console.error('Brainstorm error:', err);
     return 'Could not reach the brainstorm service. Please check your connection and try again.';
   }
 }
@@ -107,14 +189,46 @@ const btn = (bg, color) => ({
   lineHeight: 1.4,
 });
 
-// ─── Tag Input ────────────────────────────────────────────────────────────────
+// ─── Tag Input with Autocomplete ─────────────────────────────────────────────
 
 function TagInput({ tags, onChange, C }) {
   const [input, setInput] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const wrapperRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const addTag = (val) => {
     const tag = val.trim();
-    if (tag && !tags.includes(tag)) onChange([...tags, tag]);
+    if (tag && !tags.includes(tag)) {
+      onChange([...tags, tag]);
+      saveIngredientToDb(tag);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const val = e.target.value;
+    setInput(val);
+    if (val.trim().length > 0) {
+      const db = loadIngredientsDb();
+      const lower = val.toLowerCase();
+      const matches = db
+        .filter(i => i.toLowerCase().includes(lower) && !tags.includes(i))
+        .slice(0, 8);
+      setSuggestions(matches);
+      setShowSuggestions(matches.length > 0);
+    } else {
+      setShowSuggestions(false);
+    }
   };
 
   const handleKeyDown = (e) => {
@@ -122,29 +236,56 @@ function TagInput({ tags, onChange, C }) {
       e.preventDefault();
       addTag(input);
       setInput('');
+      setShowSuggestions(false);
     } else if (e.key === 'Backspace' && !input && tags.length) {
       onChange(tags.slice(0, -1));
+    } else if (e.key === 'Escape') {
+      setShowSuggestions(false);
     }
+  };
+
+  const handleSelectSuggestion = (s) => {
+    addTag(s);
+    setInput('');
+    setShowSuggestions(false);
   };
 
   const removeTag = (i) => onChange(tags.filter((_, idx) => idx !== i));
 
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, padding: '8px 10px', border: `1px solid ${C.border}`, borderRadius: 8, background: C.bg, minHeight: 42, cursor: 'text' }}>
-      {tags.map((t, i) => (
-        <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: C.accentLight, color: C.accent, borderRadius: 20, padding: '3px 10px', fontSize: 13, fontWeight: 500 }}>
-          {t}
-          <button onClick={() => removeTag(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: C.accent, padding: 0, lineHeight: 1, fontSize: 15 }}>×</button>
-        </span>
-      ))}
-      <input
-        value={input}
-        onChange={e => setInput(e.target.value)}
-        onKeyDown={handleKeyDown}
-        onBlur={() => { if (input.trim()) { addTag(input); setInput(''); } }}
-        placeholder={tags.length ? '' : 'Type ingredient, press Enter…'}
-        style={{ border: 'none', outline: 'none', background: 'transparent', fontSize: 13, color: C.text, flexGrow: 1, minWidth: 120 }}
-      />
+    <div ref={wrapperRef} style={{ position: 'relative' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, padding: '8px 10px', border: `1px solid ${C.border}`, borderRadius: 8, background: C.bg, minHeight: 42, cursor: 'text' }}>
+        {tags.map((t, i) => (
+          <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: C.accentLight, color: C.accent, borderRadius: 20, padding: '3px 10px', fontSize: 13, fontWeight: 500 }}>
+            {t}
+            <button onClick={() => removeTag(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: C.accent, padding: 0, lineHeight: 1, fontSize: 15 }}>x</button>
+          </span>
+        ))}
+        <input
+          value={input}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+          onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true); }}
+          onBlur={() => { setTimeout(() => { if (input.trim()) { addTag(input); setInput(''); } }, 150); }}
+          placeholder={tags.length ? '' : 'Type ingredient, press Enter...'}
+          style={{ border: 'none', outline: 'none', background: 'transparent', fontSize: 13, color: C.text, flexGrow: 1, minWidth: 120 }}
+        />
+      </div>
+      {showSuggestions && (
+        <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: C.card, border: `1px solid ${C.border}`, borderRadius: 8, boxShadow: '0 4px 16px rgba(0,0,0,0.12)', zIndex: 10, maxHeight: 180, overflow: 'auto', marginTop: 4 }}>
+          {suggestions.map((s, i) => (
+            <div
+              key={i}
+              onMouseDown={(e) => { e.preventDefault(); handleSelectSuggestion(s); }}
+              style={{ padding: '8px 12px', fontSize: 13, color: C.text, cursor: 'pointer', borderBottom: i < suggestions.length - 1 ? `1px solid ${C.border}44` : 'none' }}
+              onMouseEnter={e => e.target.style.background = C.accentLight}
+              onMouseLeave={e => e.target.style.background = 'transparent'}
+            >
+              {s}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -181,7 +322,6 @@ function GroceryList({ groceries, onToggle, onRemove, onAddFromCourses, C, cours
       </div>
 
       <div style={{ padding: 20 }}>
-        {/* Add from courses */}
         {uniqueAvailable.length > 0 && (
           <div style={{ marginBottom: 16 }}>
             <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: C.muted, textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 8 }}>Add from courses</label>
@@ -199,13 +339,12 @@ function GroceryList({ groceries, onToggle, onRemove, onAddFromCourses, C, cours
           </div>
         )}
 
-        {/* Manual add */}
         <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
           <input
             value={manualInput}
             onChange={e => setManualInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleAddManual()}
-            placeholder="Add a custom item…"
+            placeholder="Add a custom item..."
             style={{ flex: 1, padding: '9px 12px', border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 13, color: C.text, background: C.bg, outline: 'none' }}
           />
           <button onClick={handleAddManual} disabled={!manualInput.trim()} style={{ ...btn(C.gold, '#fff'), opacity: manualInput.trim() ? 1 : 0.5 }}>
@@ -213,7 +352,6 @@ function GroceryList({ groceries, onToggle, onRemove, onAddFromCourses, C, cours
           </button>
         </div>
 
-        {/* Pending items */}
         {pending.length === 0 && bought.length === 0 && (
           <p style={{ color: C.muted, fontSize: 13, textAlign: 'center', padding: '12px 0' }}>
             No items yet. Add ingredients from your courses or type a custom item above.
@@ -221,29 +359,18 @@ function GroceryList({ groceries, onToggle, onRemove, onAddFromCourses, C, cours
         )}
         {pending.map(g => (
           <div key={g.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0', borderBottom: `1px solid ${C.border}22` }}>
-            <input
-              type="checkbox"
-              checked={false}
-              onChange={() => onToggle(g.id)}
-              style={{ width: 18, height: 18, accentColor: C.green, cursor: 'pointer' }}
-            />
+            <input type="checkbox" checked={false} onChange={() => onToggle(g.id)} style={{ width: 18, height: 18, accentColor: C.green, cursor: 'pointer' }} />
             <span style={{ flex: 1, fontSize: 14, color: C.text }}>{g.name}</span>
-            <button onClick={() => onRemove(g.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: C.muted, fontSize: 16, padding: '2px 6px', lineHeight: 1 }}>×</button>
+            <button onClick={() => onRemove(g.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: C.muted, fontSize: 16, padding: '2px 6px', lineHeight: 1 }}>x</button>
           </div>
         ))}
 
-        {/* Bought items */}
         {bought.length > 0 && (
           <div style={{ marginTop: 12 }}>
             <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: C.muted, textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 6 }}>Purchased</label>
             {bought.map(g => (
               <div key={g.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 0', opacity: 0.55 }}>
-                <input
-                  type="checkbox"
-                  checked={true}
-                  onChange={() => onToggle(g.id)}
-                  style={{ width: 18, height: 18, accentColor: C.green, cursor: 'pointer' }}
-                />
+                <input type="checkbox" checked={true} onChange={() => onToggle(g.id)} style={{ width: 18, height: 18, accentColor: C.green, cursor: 'pointer' }} />
                 <span style={{ flex: 1, fontSize: 14, color: C.muted, textDecoration: 'line-through' }}>{g.name}</span>
                 <button onClick={() => onRemove(g.id)} title="Remove" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#c0392b', fontSize: 14, padding: '2px 6px', lineHeight: 1, fontWeight: 600 }}>Delete</button>
               </div>
@@ -260,6 +387,7 @@ function GroceryList({ groceries, onToggle, onRemove, onAddFromCourses, C, cours
 function CourseCard({ course, onUpdate, onRemove, onMoveUp, onMoveDown, isFirst, isLast, C }) {
   const [showBrainstorm, setShowBrainstorm] = useState(false);
   const [imgError, setImgError] = useState(false);
+  const [imgLoading, setImgLoading] = useState(false);
 
   const update = (key, val) => onUpdate(course.id, { [key]: val });
 
@@ -267,8 +395,9 @@ function CourseCard({ course, onUpdate, onRemove, onMoveUp, onMoveDown, isFirst,
     if (!course.imagePrompt.trim()) return;
     const newSeed = genId();
     setImgError(false);
-    update('imageSeed', newSeed);
-    update('imageUrl', buildImageUrl(course.imagePrompt, newSeed));
+    setImgLoading(true);
+    const url = buildImageUrl(course.imagePrompt, newSeed);
+    onUpdate(course.id, { imageSeed: newSeed, imageUrl: url });
   };
 
   const handleBrainstorm = async () => {
@@ -280,6 +409,13 @@ function CourseCard({ course, onUpdate, onRemove, onMoveUp, onMoveDown, isFirst,
     update('brainstormLoading', false);
   };
 
+  // Save ingredients to DB whenever they change
+  useEffect(() => {
+    if (course.ingredients.length > 0) {
+      saveIngredientsToDb(course.ingredients);
+    }
+  }, [course.ingredients]);
+
   return (
     <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, boxShadow: C.shadow, overflow: 'hidden', marginBottom: 20 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 20px', background: C.accentLight, borderBottom: `1px solid ${C.border}` }}>
@@ -290,12 +426,12 @@ function CourseCard({ course, onUpdate, onRemove, onMoveUp, onMoveDown, isFirst,
           value={course.courseName}
           onChange={e => update('courseName', e.target.value)}
           style={{ flex: 1, border: 'none', background: 'transparent', fontSize: 17, fontWeight: 700, color: C.heading, outline: 'none', fontFamily: 'Georgia, serif' }}
-          placeholder="Course name…"
+          placeholder="Course name..."
         />
         <div style={{ display: 'flex', gap: 4 }}>
-          <button onClick={onMoveUp} disabled={isFirst} title="Move up" style={{ ...btn(C.card, C.muted), padding: '5px 9px', opacity: isFirst ? 0.3 : 1, border: `1px solid ${C.border}` }}>↑</button>
-          <button onClick={onMoveDown} disabled={isLast} title="Move down" style={{ ...btn(C.card, C.muted), padding: '5px 9px', opacity: isLast ? 0.3 : 1, border: `1px solid ${C.border}` }}>↓</button>
-          <button onClick={() => onRemove(course.id)} title="Remove course" style={{ ...btn(C.card, '#c0392b'), padding: '5px 9px', border: `1px solid ${C.border}` }}>×</button>
+          <button onClick={onMoveUp} disabled={isFirst} title="Move up" style={{ ...btn(C.card, C.muted), padding: '5px 9px', opacity: isFirst ? 0.3 : 1, border: `1px solid ${C.border}` }}>up</button>
+          <button onClick={onMoveDown} disabled={isLast} title="Move down" style={{ ...btn(C.card, C.muted), padding: '5px 9px', opacity: isLast ? 0.3 : 1, border: `1px solid ${C.border}` }}>dn</button>
+          <button onClick={() => onRemove(course.id)} title="Remove course" style={{ ...btn(C.card, '#c0392b'), padding: '5px 9px', border: `1px solid ${C.border}` }}>x</button>
         </div>
       </div>
 
@@ -306,7 +442,7 @@ function CourseCard({ course, onUpdate, onRemove, onMoveUp, onMoveDown, isFirst,
             <input
               value={course.dishName}
               onChange={e => update('dishName', e.target.value)}
-              placeholder="e.g. Hokkaido Scallop, Cauliflower Velouté…"
+              placeholder="e.g. Hokkaido Scallop, Cauliflower Veloute..."
               style={{ width: '100%', padding: '9px 12px', border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 14, color: C.text, background: C.bg, boxSizing: 'border-box', outline: 'none' }}
             />
           </div>
@@ -315,7 +451,7 @@ function CourseCard({ course, onUpdate, onRemove, onMoveUp, onMoveDown, isFirst,
             <textarea
               value={course.description}
               onChange={e => update('description', e.target.value)}
-              placeholder="Describe the dish, its flavors, inspiration…"
+              placeholder="Describe the dish, its flavors, inspiration..."
               rows={4}
               style={{ width: '100%', padding: '9px 12px', border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 14, color: C.text, background: C.bg, resize: 'vertical', boxSizing: 'border-box', outline: 'none', fontFamily: 'inherit' }}
             />
@@ -323,7 +459,7 @@ function CourseCard({ course, onUpdate, onRemove, onMoveUp, onMoveDown, isFirst,
           <div>
             <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: C.muted, textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 5 }}>Ingredients</label>
             <TagInput tags={course.ingredients} onChange={tags => update('ingredients', tags)} C={C} />
-            <p style={{ margin: '4px 0 0', fontSize: 11, color: C.muted }}>Press Enter or comma to add each ingredient</p>
+            <p style={{ margin: '4px 0 0', fontSize: 11, color: C.muted }}>Press Enter or comma to add. Suggestions appear from your history.</p>
           </div>
         </div>
 
@@ -333,7 +469,7 @@ function CourseCard({ course, onUpdate, onRemove, onMoveUp, onMoveDown, isFirst,
             <textarea
               value={course.notes}
               onChange={e => update('notes', e.target.value)}
-              placeholder="Technique notes, service tips, variations to try…"
+              placeholder="Technique notes, service tips, variations to try..."
               rows={4}
               style={{ width: '100%', padding: '9px 12px', border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 14, color: C.text, background: C.bg, resize: 'vertical', boxSizing: 'border-box', outline: 'none', fontFamily: 'inherit' }}
             />
@@ -346,7 +482,7 @@ function CourseCard({ course, onUpdate, onRemove, onMoveUp, onMoveDown, isFirst,
                 value={course.imagePrompt}
                 onChange={e => update('imagePrompt', e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleGenerateImage()}
-                placeholder="Describe visual: colours, garnish, plating…"
+                placeholder="Describe visual: colours, garnish, plating..."
                 style={{ flex: 1, padding: '9px 12px', border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 13, color: C.text, background: C.bg, outline: 'none' }}
               />
               <button
@@ -357,18 +493,24 @@ function CourseCard({ course, onUpdate, onRemove, onMoveUp, onMoveDown, isFirst,
                 Generate
               </button>
             </div>
-            {course.imageUrl && !imgError && (
-              <div style={{ marginTop: 10, borderRadius: 10, overflow: 'hidden', border: `1px solid ${C.border}` }}>
-                <img
-                  src={course.imageUrl}
-                  alt={course.dishName || 'Dish'}
-                  onError={() => setImgError(true)}
-                  style={{ width: '100%', display: 'block', maxHeight: 220, objectFit: 'cover' }}
-                />
+            {course.imageUrl && (
+              <div style={{ marginTop: 10 }}>
+                {imgLoading && !imgError && (
+                  <div style={{ padding: 20, textAlign: 'center', color: C.muted, fontSize: 13 }}>Generating image...</div>
+                )}
+                <div style={{ borderRadius: 10, overflow: 'hidden', border: `1px solid ${C.border}`, display: imgError ? 'none' : 'block' }}>
+                  <img
+                    src={course.imageUrl}
+                    alt={course.dishName || 'Dish'}
+                    onLoad={() => setImgLoading(false)}
+                    onError={() => { setImgError(true); setImgLoading(false); }}
+                    style={{ width: '100%', display: 'block', maxHeight: 220, objectFit: 'cover' }}
+                  />
+                </div>
+                {imgError && (
+                  <p style={{ marginTop: 8, fontSize: 12, color: '#c0392b' }}>Image failed to load. Try a different description or generate again.</p>
+                )}
               </div>
-            )}
-            {imgError && (
-              <p style={{ marginTop: 8, fontSize: 12, color: '#c0392b' }}>Image failed to load. Try generating again.</p>
             )}
           </div>
         </div>
@@ -377,15 +519,16 @@ function CourseCard({ course, onUpdate, onRemove, onMoveUp, onMoveDown, isFirst,
       <div style={{ padding: '0 20px 20px' }}>
         <button
           onClick={handleBrainstorm}
+          disabled={course.brainstormLoading}
           style={{ ...btn(showBrainstorm ? C.greenLight : C.green, showBrainstorm ? C.green : '#fff'), border: `1px solid ${C.green}44` }}
         >
-          {course.brainstormLoading ? 'Thinking…' : 'AI Recipe Brainstorm'}
+          {course.brainstormLoading ? 'Thinking...' : 'AI Recipe Brainstorm'}
         </button>
 
         {showBrainstorm && (
           <div style={{ marginTop: 12, padding: 14, background: C.greenLight, border: `1px solid ${C.green}22`, borderRadius: 10 }}>
             {course.brainstormLoading ? (
-              <div style={{ color: C.green, fontSize: 13 }}>Consulting the chef…</div>
+              <div style={{ color: C.green, fontSize: 13 }}>Consulting the chef...</div>
             ) : (
               <pre style={{ margin: 0, whiteSpace: 'pre-wrap', fontSize: 13, color: C.text, fontFamily: 'inherit', lineHeight: 1.7 }}>
                 {course.brainstormResult}
@@ -400,14 +543,21 @@ function CourseCard({ course, onUpdate, onRemove, onMoveUp, onMoveDown, isFirst,
 
 // ─── Menu Editor ──────────────────────────────────────────────────────────────
 
-function MenuEditor({ roomId, menuName, menuTheme, courses, groceries, peers, onUpdateMenuName, onUpdateMenuTheme, onAddCourse, onUpdateCourse, onRemoveCourse, onMoveCourse, onAddGroceries, onToggleGrocery, onRemoveGrocery, C }) {
+function MenuEditor({ roomId, menuName, menuTheme, courses, groceries, peers, saveId, onUpdateMenuName, onUpdateMenuTheme, onAddCourse, onUpdateCourse, onRemoveCourse, onMoveCourse, onAddGroceries, onToggleGrocery, onRemoveGrocery, onSaveMenu, C }) {
   const [copied, setCopied] = useState(false);
+  const [saveMsg, setSaveMsg] = useState('');
 
   const copyRoom = () => {
     navigator.clipboard.writeText(roomId).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
+  };
+
+  const handleSave = () => {
+    onSaveMenu();
+    setSaveMsg('Saved!');
+    setTimeout(() => setSaveMsg(''), 2000);
   };
 
   return (
@@ -420,6 +570,9 @@ function MenuEditor({ roomId, menuName, menuTheme, courses, groceries, peers, on
             <span style={{ fontSize: 13, color: C.muted }}>{peers} collaborator{peers !== 1 ? 's' : ''} online</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <button onClick={handleSave} style={{ ...btn(C.gold, '#fff'), padding: '5px 14px' }}>
+              {saveMsg || 'Save Menu'}
+            </button>
             <span style={{ fontSize: 12, color: C.muted }}>Room:</span>
             <code style={{ fontSize: 13, background: C.accentLight, color: C.accent, padding: '4px 10px', borderRadius: 6, fontWeight: 600 }}>{roomId}</code>
             <button onClick={copyRoom} style={{ ...btn(copied ? C.green : C.accent, '#fff'), padding: '5px 12px' }}>
@@ -435,13 +588,13 @@ function MenuEditor({ roomId, menuName, menuTheme, courses, groceries, peers, on
               value={menuName}
               onChange={e => onUpdateMenuName(e.target.value)}
               style={{ flex: 1, border: 'none', background: 'transparent', fontSize: 28, fontWeight: 700, color: C.heading, outline: 'none', fontFamily: 'Georgia, serif' }}
-              placeholder="Tasting Menu Name…"
+              placeholder="Tasting Menu Name..."
             />
           </div>
           <input
             value={menuTheme}
             onChange={e => onUpdateMenuTheme(e.target.value)}
-            placeholder="Theme or concept (e.g. Spring Foraging, Coastal Japan, Nose-to-Tail…)"
+            placeholder="Theme or concept (e.g. Spring Foraging, Coastal Japan, Nose-to-Tail...)"
             style={{ width: '100%', border: 'none', borderTop: `1px solid ${C.border}`, paddingTop: 12, paddingBottom: 0, background: 'transparent', fontSize: 15, color: C.muted, outline: 'none', boxSizing: 'border-box', fontStyle: 'italic' }}
           />
         </div>
@@ -466,7 +619,6 @@ function MenuEditor({ roomId, menuName, menuTheme, courses, groceries, peers, on
           />
         ))}
 
-        {/* Add course */}
         <button
           onClick={onAddCourse}
           style={{ ...btn(C.accent, '#fff'), width: '100%', justifyContent: 'center', padding: '14px', fontSize: 15, borderRadius: 12, boxShadow: C.shadow, marginBottom: 28 }}
@@ -474,7 +626,6 @@ function MenuEditor({ roomId, menuName, menuTheme, courses, groceries, peers, on
           + Add Course
         </button>
 
-        {/* Grocery List */}
         <GroceryList
           groceries={groceries}
           courses={courses}
@@ -488,9 +639,67 @@ function MenuEditor({ roomId, menuName, menuTheme, courses, groceries, peers, on
   );
 }
 
+// ─── Saved Menus Tab ─────────────────────────────────────────────────────────
+
+function SavedMenusTab({ onLoadMenu, onBack, C }) {
+  const [menus, setMenus] = useState([]);
+
+  useEffect(() => {
+    setMenus(loadSavedMenus());
+  }, []);
+
+  const handleDelete = (id) => {
+    deleteSavedMenu(id);
+    setMenus(loadSavedMenus());
+  };
+
+  const formatDate = (iso) => {
+    try {
+      const d = new Date(iso);
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    } catch { return iso; }
+  };
+
+  return (
+    <div style={{ minHeight: '80vh', background: C.bg, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: 24, paddingTop: 60 }}>
+      <div style={{ maxWidth: 600, width: '100%' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28 }}>
+          <button onClick={onBack} style={{ ...btn(C.card, C.text), border: `1px solid ${C.border}`, padding: '6px 14px' }}>Back</button>
+          <h2 style={{ fontFamily: 'Georgia, serif', fontSize: 24, color: C.heading, margin: 0 }}>Saved Menus</h2>
+        </div>
+
+        {menus.length === 0 ? (
+          <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: 40, textAlign: 'center' }}>
+            <p style={{ color: C.muted, fontSize: 15 }}>No saved menus yet.</p>
+            <p style={{ color: C.muted, fontSize: 13 }}>Create a menu and click "Save Menu" to store it locally.</p>
+          </div>
+        ) : (
+          <div style={{ display: 'grid', gap: 12 }}>
+            {menus.map(m => (
+              <div key={m.id} style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, boxShadow: C.shadow, padding: '18px 22px', display: 'flex', alignItems: 'center', gap: 16 }}>
+                <div style={{ flex: 1 }}>
+                  <h3 style={{ fontFamily: 'Georgia, serif', fontSize: 17, color: C.heading, margin: '0 0 4px' }}>{m.name}</h3>
+                  {m.theme && <p style={{ fontSize: 13, color: C.muted, margin: '0 0 6px', fontStyle: 'italic' }}>{m.theme}</p>}
+                  <div style={{ fontSize: 12, color: C.muted }}>
+                    {m.courseCount} course{m.courseCount !== 1 ? 's' : ''} &middot; Saved {formatDate(m.savedAt)}
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: 6 }}>
+                  <button onClick={() => onLoadMenu(m)} style={{ ...btn(C.green, '#fff'), padding: '6px 14px', fontSize: 13 }}>Open</button>
+                  <button onClick={() => handleDelete(m.id)} style={{ ...btn(C.card, '#c0392b'), padding: '6px 14px', fontSize: 13, border: `1px solid ${C.border}` }}>Delete</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── Landing Screen ───────────────────────────────────────────────────────────
 
-function LandingScreen({ onCreateRoom, onJoinRoom, C }) {
+function LandingScreen({ onCreateRoom, onJoinRoom, onOpenSaved, savedCount, C }) {
   const [joinInput, setJoinInput] = useState('');
   const [error, setError] = useState('');
 
@@ -521,6 +730,19 @@ function LandingScreen({ onCreateRoom, onJoinRoom, C }) {
             </p>
             <button onClick={onCreateRoom} style={{ ...btn(C.accent, '#fff'), width: '100%', justifyContent: 'center', padding: '12px', fontSize: 15, borderRadius: 10 }}>
               Create New Menu
+            </button>
+          </div>
+
+          {/* Saved Menus */}
+          <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, boxShadow: C.shadow, padding: 28 }}>
+            <h2 style={{ fontFamily: 'Georgia, serif', fontSize: 20, color: C.heading, margin: '0 0 8px' }}>Saved Menus</h2>
+            <p style={{ color: C.muted, fontSize: 14, margin: '0 0 18px', lineHeight: 1.5 }}>
+              {savedCount > 0
+                ? `You have ${savedCount} saved menu${savedCount !== 1 ? 's' : ''}. Pick up where you left off.`
+                : 'No saved menus yet. Create a menu and save it to come back later.'}
+            </p>
+            <button onClick={onOpenSaved} style={{ ...btn(C.gold, '#fff'), width: '100%', justifyContent: 'center', padding: '12px', fontSize: 15, borderRadius: 10 }}>
+              {savedCount > 0 ? 'View Saved Menus' : 'Saved Menus'}
             </button>
           </div>
 
@@ -558,16 +780,23 @@ function LandingScreen({ onCreateRoom, onJoinRoom, C }) {
 
 function TastingMenuApp() {
   const C = useThemeColors();
-  const [screen, setScreen] = useState('landing');
+  const [screen, setScreen] = useState('landing'); // landing | saved | editor
   const [roomId, setRoomId] = useState('');
   const [peers, setPeers] = useState(1);
   const [menuName, setMenuName] = useState('Untitled Tasting Menu');
   const [menuTheme, setMenuTheme] = useState('');
   const [courses, setCourses] = useState([makeCourse(1)]);
   const [groceries, setGroceries] = useState([]);
+  const [saveId, setSaveId] = useState(null);
+  const [savedCount, setSavedCount] = useState(0);
 
   const yStateRef = useRef(null);
   const initDone = useRef(false);
+
+  // Count saved menus on mount
+  useEffect(() => {
+    setSavedCount(loadSavedMenus().length);
+  }, [screen]);
 
   const syncKey = useCallback((key, val) => {
     if (yStateRef.current) {
@@ -619,6 +848,41 @@ function TastingMenuApp() {
     setRoomId(id);
     setScreen('editor');
   }, []);
+
+  const loadSavedIntoEditor = useCallback((menu) => {
+    setSaveId(menu.id);
+    setMenuName(menu.name);
+    setMenuTheme(menu.theme || '');
+    setCourses(menu.courses || [makeCourse(1)]);
+    setGroceries(menu.groceries || []);
+    // Create a room for collaboration but pre-fill with saved data
+    const id = genRoomCode();
+    initRoom(id).then(() => {
+      // After room is ready, sync saved data
+      setTimeout(() => {
+        if (yStateRef.current) {
+          const ydoc = yStateRef.current.doc;
+          ydoc.transact(() => {
+            yStateRef.current.set('menuName', menu.name);
+            yStateRef.current.set('menuTheme', menu.theme || '');
+            yStateRef.current.set('courses', JSON.stringify(menu.courses || [makeCourse(1)]));
+            yStateRef.current.set('groceries', JSON.stringify(menu.groceries || []));
+          });
+        }
+      }, 1500);
+    });
+  }, [initRoom]);
+
+  const handleSaveMenu = useCallback(() => {
+    const id = saveMenuToStorage({
+      id: saveId,
+      menuName,
+      menuTheme,
+      courses,
+      groceries,
+    });
+    setSaveId(id);
+  }, [saveId, menuName, menuTheme, courses, groceries]);
 
   const updateMenuName = (v) => { setMenuName(v); syncKey('menuName', v); };
   const updateMenuTheme = (v) => { setMenuTheme(v); syncKey('menuTheme', v); };
@@ -694,11 +958,23 @@ function TastingMenuApp() {
 
   if (!C.bg) return null;
 
+  if (screen === 'saved') {
+    return (
+      <SavedMenusTab
+        onLoadMenu={loadSavedIntoEditor}
+        onBack={() => setScreen('landing')}
+        C={C}
+      />
+    );
+  }
+
   if (screen === 'landing') {
     return (
       <LandingScreen
-        onCreateRoom={() => initRoom(genRoomCode())}
-        onJoinRoom={initRoom}
+        onCreateRoom={() => { setSaveId(null); initRoom(genRoomCode()); }}
+        onJoinRoom={(id) => { setSaveId(null); initRoom(id); }}
+        onOpenSaved={() => setScreen('saved')}
+        savedCount={savedCount}
         C={C}
       />
     );
@@ -712,6 +988,7 @@ function TastingMenuApp() {
       courses={courses}
       groceries={groceries}
       peers={peers}
+      saveId={saveId}
       onUpdateMenuName={updateMenuName}
       onUpdateMenuTheme={updateMenuTheme}
       onAddCourse={addCourse}
@@ -721,6 +998,7 @@ function TastingMenuApp() {
       onAddGroceries={addGroceries}
       onToggleGrocery={toggleGrocery}
       onRemoveGrocery={removeGrocery}
+      onSaveMenu={handleSaveMenu}
       C={C}
     />
   );
@@ -731,10 +1009,10 @@ function TastingMenuApp() {
 export default function TastingMenuPage() {
   return (
     <Layout
-      title="Menu Atelier – Collaborative Tasting Menu Designer"
+      title="Menu Atelier - Collaborative Tasting Menu Designer"
       description="Design tasting menus collaboratively in real time. Brainstorm recipes and generate dish images with AI."
     >
-      <BrowserOnly fallback={<div style={{ padding: '60px 20px', textAlign: 'center' }}>Loading Menu Atelier…</div>}>
+      <BrowserOnly fallback={<div style={{ padding: '60px 20px', textAlign: 'center' }}>Loading Menu Atelier...</div>}>
         {() => <TastingMenuApp />}
       </BrowserOnly>
     </Layout>
