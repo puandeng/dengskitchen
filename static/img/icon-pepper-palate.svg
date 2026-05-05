@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Pepper & Palate A: Steak & mash - steak has sear marks, fat marbling -->
+  <!-- Plate -->
+  <ellipse cx="32" cy="36" rx="26" ry="22" fill="#faf8f3" stroke="#c4b5a0" stroke-width="1.5"/>
+  <ellipse cx="32" cy="36" rx="20" ry="16" fill="none" stroke="#e8d5c4" stroke-width="0.7"/>
+  <!-- Mashed potatoes - creamy mound -->
+  <ellipse cx="22" cy="38" rx="7" ry="5" fill="#f5edd8"/>
+  <ellipse cx="22" cy="36" rx="6" ry="4" fill="#faf5e8"/>
+  <!-- Butter pat on mash -->
+  <ellipse cx="22" cy="34" rx="2.5" ry="1.5" fill="#f0d060" opacity="0.7"/>
+  <!-- Steak - thick cut, angled slightly -->
+  <g transform="rotate(-8 40 36)">
+    <!-- Base steak shape -->
+    <path d="M32 30 Q34 28 42 28 Q50 28 50 32 L50 40 Q50 44 42 44 Q34 44 32 42 Z" fill="#5c2a1a"/>
+    <!-- Seared top surface -->
+    <path d="M32 30 Q34 28 42 28 Q50 28 50 32 Q48 34 42 34 Q34 34 32 30Z" fill="#7a3d2a"/>
+    <!-- Grill/sear marks -->
+    <line x1="34" y1="30" x2="38" y2="29" stroke="#3d1a0f" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="38" y1="31" x2="42" y2="29.5" stroke="#3d1a0f" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="42" y1="31.5" x2="46" y2="30" stroke="#3d1a0f" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="46" y1="32" x2="48" y2="31" stroke="#3d1a0f" stroke-width="1" stroke-linecap="round"/>
+    <!-- Fat marbling lines -->
+    <path d="M34 35 Q36 34 38 35" stroke="#8b5e4a" stroke-width="0.5" fill="none"/>
+    <path d="M40 36 Q42 35 44 36.5" stroke="#8b5e4a" stroke-width="0.5" fill="none"/>
+    <path d="M36 38 Q38 37 40 38" stroke="#8b5e4a" stroke-width="0.4" fill="none"/>
+    <path d="M42 39 Q44 38 47 39" stroke="#8b5e4a" stroke-width="0.4" fill="none"/>
+    <!-- Fat cap on edge -->
+    <path d="M50 32 L50 36 Q49 35 50 32" fill="#e8d5c4" opacity="0.6"/>
+  </g>
+  <!-- Jus/sauce pool -->
+  <ellipse cx="38" cy="46" rx="6" ry="1.5" fill="#3d1a0f" opacity="0.3"/>
+  <!-- Rosemary sprig -->
+  <line x1="26" y1="28" x2="32" y2="26" stroke="#4a7a3a" stroke-width="0.8" stroke-linecap="round"/>
+  <ellipse cx="27" cy="27" rx="1.5" ry="0.8" fill="#6b8f5e" transform="rotate(-20 27 27)"/>
+  <ellipse cx="29" cy="26.5" rx="1.5" ry="0.8" fill="#6b8f5e" transform="rotate(-10 29 26.5)"/>
+  <ellipse cx="31" cy="26" rx="1.5" ry="0.8" fill="#6b8f5e" transform="rotate(-5 31 26)"/>
+</svg>

@@ -47,8 +47,8 @@ const config = {
       navbar: {
         title: "Deng's Kitchen",
         items: [
-          {to: '/tasting-menu', label: '🌶️ Pepper & Palate', position: 'left'},
-          {to: '/blog', label: '🧂 Salt & Story', position: 'left'},
+          {to: '/tasting-menu', label: '🍽️ Pepper & Palate', position: 'left'},
+          {to: '/blog', label: '📖 Salt & Story', position: 'left'},
           {
             href: 'https://github.com/puandeng',
             label: 'GitHub',
@@ -63,11 +63,11 @@ const config = {
             title: 'Explore',
             items: [
               {
-                label: '🌶️ Pepper & Palate',
+                label: '🍽️ Pepper & Palate',
                 to: '/tasting-menu',
               },
               {
-                label: '🧂 Salt & Story',
+                label: '📖 Salt & Story',
                 to: '/blog',
               },
             ],

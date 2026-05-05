@@ -113,6 +113,12 @@
   margin-bottom: 14px;
 }
 
+.featureIcon {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 14px;
+}
+
 .featureTitle {
   font-family: 'Georgia', serif;
   font-size: 20px;
