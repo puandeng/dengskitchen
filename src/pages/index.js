@@ -7,14 +7,14 @@ import styles from './index.module.css';
 
 const features = [
   {
-    emoji: '🌶️',
+    icon: '/img/icon-pepper-palate.svg',
     title: 'Pepper & Palate',
     description: 'Design tasting menus collaboratively in real time. Brainstorm recipes with AI and generate beautiful dish images.',
     link: '/tasting-menu',
     linkText: 'Start Creating',
   },
   {
-    emoji: '🧂',
+    icon: '/img/icon-salt-story.svg',
     title: 'Salt & Story',
     description: 'Thoughts on cooking, ingredients, techniques, and the stories behind every dish throughout the year.',
     link: '/blog',
@@ -37,23 +37,19 @@ function HomepageHeader() {
         <img src="/img/pineapple-bun.svg" alt="Pineapple Bun" className={styles.heroEmoji} />
         <h1 className={styles.heroTitle}>{siteConfig.title}</h1>
         <p className={styles.heroSubtitle}>{siteConfig.tagline}</p>
-        <div className={styles.heroButtons}>
-          <Link className={styles.heroPrimary} to="/tasting-menu">
-            🌶️ Design a Menu
-          </Link>
-          <Link className={styles.heroSecondary} to="/blog">
-            🧂 Salt & Story
-          </Link>
-        </div>
       </div>
     </header>
   );
 }
 
-function FeatureCard({emoji, title, description, link, linkText}) {
+function FeatureCard({icon, emoji, title, description, link, linkText}) {
   return (
     <div className={styles.featureCard}>
-      <div className={styles.featureEmoji}>{emoji}</div>
+      {icon ? (
+        <img src={icon} alt={title} className={styles.featureIcon} />
+      ) : (
+        <div className={styles.featureEmoji}>{emoji}</div>
+      )}
       <h3 className={styles.featureTitle}>{title}</h3>
       <p className={styles.featureDesc}>{description}</p>
       <Link className={styles.featureLink} to={link}>{linkText} →</Link>

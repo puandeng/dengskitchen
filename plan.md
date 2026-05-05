@@ -76,6 +76,10 @@ A personal culinary website where Aaron can design tasting menus collaboratively
 - [x] Rename "Food Journal" on main page and "Blog" in sidebar/nav to "Salt & Story"
 - [x] Update tagline from "Crafting Culinary Experiences" to "Passion Project of a Home Cook"
 - [x] Rename "Menu Atelier" to "Pepper & Palate" across the site
+- [x] Change Pepper & Palate icon to reflect menu development instead of a literal pepper
+- [x] Change Salt & Story icon to reflect writing/blogging instead of a salt shaker
+- [x] Fix pineapple bun icon centering on the homepage so it looks right
+- [x] Fix pineapple bun favicon not displaying correctly
 
 ## Planned Enhancements
 
