@@ -81,6 +81,13 @@ A personal culinary website where Aaron can design tasting menus collaboratively
 - [x] Fix pineapple bun icon centering on the homepage so it looks right
 - [x] Fix pineapple bun favicon not displaying correctly
 
+### Fire & Feast — Video Recipe Page
+
+- [x] Replace the Restaurant Reviews section with "Fire & Feast" — a new page for embedded YouTube cooking videos
+- [x] Build the Fire & Feast page layout: embedded YouTube video on one side, recipe description column next to it
+- [x] Add Fire & Feast to the navbar, footer, and homepage feature card (following Pepper & Palate / Salt & Story theming)
+- [x] Add a YouTube link to the "Follow My Cooking" footer section alongside Instagram
+
 ## Planned Enhancements
 
 ### Near-term

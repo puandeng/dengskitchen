@@ -21,11 +21,11 @@ const features = [
     linkText: 'Read the Blog',
   },
   {
-    emoji: '⭐',
-    title: 'Restaurant Reviews',
-    description: 'Honest reviews and recommendations from dining experiences — from hidden gems to fine dining.',
-    link: '#',
-    linkText: 'Coming Soon',
+    icon: '/img/icon-fire-feast.svg',
+    title: 'Fire & Feast',
+    description: 'Video recipes straight from the kitchen — watch, cook along, and feast on homemade creations.',
+    link: '/fire-and-feast',
+    linkText: 'Watch Videos',
   },
 ];
 

@@ -49,6 +49,7 @@ const config = {
         items: [
           {to: '/tasting-menu', label: '🍽️ Pepper & Palate', position: 'left'},
           {to: '/blog', label: '📖 Salt & Story', position: 'left'},
+          {to: '/fire-and-feast', label: '🔥 Fire & Feast', position: 'left'},
           {
             href: 'https://github.com/puandeng',
             label: 'GitHub',
@@ -70,6 +71,10 @@ const config = {
                 label: '📖 Salt & Story',
                 to: '/blog',
               },
+              {
+                label: '🔥 Fire & Feast',
+                to: '/fire-and-feast',
+              },
             ],
           },
           {
@@ -78,6 +83,10 @@ const config = {
               {
                 label: '📸 Instagram',
                 href: 'https://instagram.com/aarondeng',
+              },
+              {
+                label: '▶️ YouTube',
+                href: 'https://youtube.com/@aarondeng',
               },
             ],
           },
