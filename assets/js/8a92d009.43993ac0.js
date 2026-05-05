@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkmy_website=self.webpackChunkmy_website||[]).push([[107],{5750:e=>{e.exports=JSON.parse('{"label":"sovereignty","permalink":"/blog/tags/sovereignty","allTagsPath":"/blog/tags","count":1}')}}]);

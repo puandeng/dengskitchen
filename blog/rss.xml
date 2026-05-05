@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+    <channel>
+        <title>Deng's Kitchen Blog</title>
+        <link>https://dengskitchen.health/blog</link>
+        <description>Deng's Kitchen Blog</description>
+        <lastBuildDate>Tue, 05 May 2026 00:00:00 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <language>en</language>
+        <item>
+            <title><![CDATA[Sourdough and Sovereignty]]></title>
+            <link>https://dengskitchen.health/blog/sourdough-and-sovereignty</link>
+            <guid>sourdough-and-sovereignty</guid>
+            <pubDate>Tue, 05 May 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[This is the first blog entry of many on my journey in discovering essential and novel ingredients that played a part in the development of a nation.]]></description>
+            <content:encoded><![CDATA[<p>This is the first blog entry of many on my journey in discovering essential and novel ingredients that played a part in the development of a nation. </p><p>Hello, and welcome to my first blog series where I'll be deep diving into countries across the globe and the key ingredients that engineered their culture into what it is today. What interested me into starting this series was initially an AI prompt (<em>AI was not used in the writing of this post :)</em>) but as a canadian born chinese, I was influenced by a multitude of different food cultures growing up and now as a home cook, learning in depth about how ingredients shapes the food I cook, is intruiging.</p>]]></content:encoded>
+            <category>intro</category>
+            <category>sovereignty</category>
+        </item>
+    </channel>
+</rss>
