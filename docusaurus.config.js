@@ -7,7 +7,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
   title: "Deng's Kitchen",
   tagline: 'Crafting Culinary Experiences',
-  url: 'https://puandeng.github.io',
+  url: 'https://dengskitchen.health/',
   baseUrl: '/',
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
