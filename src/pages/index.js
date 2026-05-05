@@ -7,15 +7,15 @@ import styles from './index.module.css';
 
 const features = [
   {
-    emoji: '🍽️',
-    title: 'Menu Atelier',
+    emoji: '🌶️',
+    title: 'Pepper & Palate',
     description: 'Design tasting menus collaboratively in real time. Brainstorm recipes with AI and generate beautiful dish images.',
     link: '/tasting-menu',
     linkText: 'Start Creating',
   },
   {
-    emoji: '📝',
-    title: 'Food Journal',
+    emoji: '🧂',
+    title: 'Salt & Story',
     description: 'Thoughts on cooking, ingredients, techniques, and the stories behind every dish throughout the year.',
     link: '/blog',
     linkText: 'Read the Blog',
@@ -34,15 +34,15 @@ function HomepageHeader() {
   return (
     <header className={styles.hero}>
       <div className={styles.heroInner}>
-        <span className={styles.heroEmoji}>👨‍🍳</span>
+        <img src="/img/pineapple-bun.svg" alt="Pineapple Bun" className={styles.heroEmoji} />
         <h1 className={styles.heroTitle}>{siteConfig.title}</h1>
         <p className={styles.heroSubtitle}>{siteConfig.tagline}</p>
         <div className={styles.heroButtons}>
           <Link className={styles.heroPrimary} to="/tasting-menu">
-            🍽️ Design a Menu
+            🌶️ Design a Menu
           </Link>
           <Link className={styles.heroSecondary} to="/blog">
-            📝 Read the Blog
+            🧂 Salt & Story
           </Link>
         </div>
       </div>

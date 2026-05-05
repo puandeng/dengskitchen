@@ -6,12 +6,12 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "Deng's Kitchen",
-  tagline: 'Crafting Culinary Experiences',
+  tagline: 'Passion Project of a Home Cook',
   url: 'https://dengskitchen.health',
   baseUrl: '/',
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/pineapple-bun.svg',
 
   organizationName: 'puandeng',
   projectName: 'dengskitchen',
@@ -31,7 +31,7 @@ const config = {
         docs: false,
         blog: {
           showReadingTime: true,
-          blogTitle: 'Food Journal',
+          blogTitle: 'Salt & Story',
           blogDescription: "Thoughts on food, cooking, and dining",
         },
         theme: {
@@ -47,8 +47,8 @@ const config = {
       navbar: {
         title: "Deng's Kitchen",
         items: [
-          {to: '/tasting-menu', label: '🍽️ Menu Atelier', position: 'left'},
-          {to: '/blog', label: '📝 Blog', position: 'left'},
+          {to: '/tasting-menu', label: '🌶️ Pepper & Palate', position: 'left'},
+          {to: '/blog', label: '🧂 Salt & Story', position: 'left'},
           {
             href: 'https://github.com/puandeng',
             label: 'GitHub',
@@ -63,11 +63,11 @@ const config = {
             title: 'Explore',
             items: [
               {
-                label: '🍽️ Menu Atelier',
+                label: '🌶️ Pepper & Palate',
                 to: '/tasting-menu',
               },
               {
-                label: '📝 Blog',
+                label: '🧂 Salt & Story',
                 to: '/blog',
               },
             ],

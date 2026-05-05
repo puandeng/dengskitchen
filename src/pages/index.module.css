@@ -10,9 +10,10 @@
 }
 
 .heroEmoji {
-  font-size: 64px;
+  width: 96px;
+  height: 96px;
   display: block;
-  margin-bottom: 16px;
+  margin: 0 auto 16px;
 }
 
 .heroTitle {
