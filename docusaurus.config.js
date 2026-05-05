@@ -8,7 +8,7 @@ const config = {
   title: "Deng's Kitchen",
   tagline: 'Crafting Culinary Experiences',
   url: 'https://puandeng.github.io',
-  baseUrl: '/dengskitchen/',
+  baseUrl: '/',
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
