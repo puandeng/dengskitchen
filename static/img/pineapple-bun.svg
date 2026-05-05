@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Pineapple Bun (Bolo Bao) - cute kawaii style -->
+  <!-- Base bun shape - golden brown -->
+  <ellipse cx="64" cy="72" rx="48" ry="40" fill="#e8a950"/>
+  <!-- Bottom shadow -->
+  <ellipse cx="64" cy="98" rx="40" ry="8" fill="#c4863a" opacity="0.5"/>
+  <!-- Crackled top crust - diamond/crosshatch pattern -->
+  <path d="M28 58 Q64 20 100 58 Q100 72 64 76 Q28 72 28 58Z" fill="#f0c060"/>
+  <!-- Crosshatch lines on crust -->
+  <g stroke="#d4a040" stroke-width="1.2" fill="none" opacity="0.7">
+    <!-- Diagonal lines going right -->
+    <line x1="34" y1="52" x2="50" y2="72"/>
+    <line x1="44" y1="42" x2="62" y2="72"/>
+    <line x1="56" y1="36" x2="76" y2="72"/>
+    <line x1="68" y1="36" x2="88" y2="68"/>
+    <line x1="80" y1="40" x2="96" y2="60"/>
+    <!-- Diagonal lines going left -->
+    <line x1="94" y1="52" x2="78" y2="72"/>
+    <line x1="84" y1="42" x2="66" y2="72"/>
+    <line x1="72" y1="36" x2="52" y2="72"/>
+    <line x1="60" y1="36" x2="40" y2="68"/>
+    <line x1="48" y1="40" x2="32" y2="60"/>
+  </g>
+  <!-- Cute face - eyes -->
+  <circle cx="50" cy="72" r="4" fill="#4a3520"/>
+  <circle cx="78" cy="72" r="4" fill="#4a3520"/>
+  <!-- Eye shine -->
+  <circle cx="48" cy="70" r="1.5" fill="#fff"/>
+  <circle cx="76" cy="70" r="1.5" fill="#fff"/>
+  <!-- Cute smile -->
+  <path d="M56 82 Q64 88 72 82" stroke="#4a3520" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <!-- Blush cheeks -->
+  <ellipse cx="42" cy="78" rx="5" ry="3.5" fill="#f0a0a0" opacity="0.5"/>
+  <ellipse cx="86" cy="78" rx="5" ry="3.5" fill="#f0a0a0" opacity="0.5"/>
+</svg>

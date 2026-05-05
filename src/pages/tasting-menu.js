@@ -715,7 +715,7 @@ function LandingScreen({ onCreateRoom, onJoinRoom, onOpenSaved, savedCount, C })
       <div style={{ maxWidth: 520, width: '100%' }}>
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
           <div style={{ fontSize: 64, marginBottom: 12 }}>🍴</div>
-          <h1 style={{ fontFamily: 'Georgia, serif', fontSize: 36, color: C.heading, margin: '0 0 10px' }}>Menu Atelier</h1>
+          <h1 style={{ fontFamily: 'Georgia, serif', fontSize: 36, color: C.heading, margin: '0 0 10px' }}>Pepper & Palate</h1>
           <p style={{ color: C.muted, fontSize: 16, margin: 0, lineHeight: 1.6 }}>
             Collaborate in real time to design tasting menus,<br />
             brainstorm recipes, and visualise every dish.
@@ -1009,10 +1009,10 @@ function TastingMenuApp() {
 export default function TastingMenuPage() {
   return (
     <Layout
-      title="Menu Atelier - Collaborative Tasting Menu Designer"
+      title="Pepper & Palate - Collaborative Tasting Menu Designer"
       description="Design tasting menus collaboratively in real time. Brainstorm recipes and generate dish images with AI."
     >
-      <BrowserOnly fallback={<div style={{ padding: '60px 20px', textAlign: 'center' }}>Loading Menu Atelier...</div>}>
+      <BrowserOnly fallback={<div style={{ padding: '60px 20px', textAlign: 'center' }}>Loading Pepper & Palate...</div>}>
         {() => <TastingMenuApp />}
       </BrowserOnly>
     </Layout>

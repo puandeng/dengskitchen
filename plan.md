@@ -70,6 +70,13 @@ A personal culinary website where Aaron can design tasting menus collaboratively
 - [x] Rename "Aaron's Kitchen" to "Deng's Kitchen" across the site (title, navbar, homepage)
 - [x] Change copyright text from "Crafted with love and Docusaurus" to "Crafted with Food and Docusaurus"
 
+### Branding & Copy Updates
+
+- [x] Change the favicon and chef emoji on the main page to a cute pineapple bun (non-copyright image)
+- [x] Rename "Food Journal" on main page and "Blog" in sidebar/nav to "Salt & Story"
+- [x] Update tagline from "Crafting Culinary Experiences" to "Passion Project of a Home Cook"
+- [x] Rename "Menu Atelier" to "Pepper & Palate" across the site
+
 ## Planned Enhancements
 
 ### Near-term
