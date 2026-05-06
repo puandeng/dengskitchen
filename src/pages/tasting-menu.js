@@ -129,6 +129,80 @@ function deleteSavedMenu(id) {
   localStorage.setItem(SAVED_MENUS_KEY, JSON.stringify(menus));
 }
 
+// ─── JSON Export / Import ─────────────────────────────────────────────────────
+
+function exportMenuAsJson(menuData) {
+  const exportData = {
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    menu: {
+      name: menuData.menuName || 'Untitled Menu',
+      theme: menuData.menuTheme || '',
+      courses: (menuData.courses || []).map(c => ({
+        courseName: c.courseName,
+        dishName: c.dishName,
+        description: c.description,
+        ingredients: c.ingredients,
+        notes: c.notes,
+      })),
+      groceries: (menuData.groceries || []).map(g => ({
+        name: g.name,
+        bought: g.bought,
+      })),
+    },
+  };
+  const json = JSON.stringify(exportData, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${(menuData.menuName || 'menu').replace(/[^a-z0-9]/gi, '-').toLowerCase()}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function importMenuFromJson() {
+  return new Promise((resolve, reject) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json,application/json';
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return reject(new Error('No file selected'));
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        try {
+          const data = JSON.parse(ev.target.result);
+          if (!data.menu) throw new Error('Invalid menu file');
+          resolve({
+            menuName: data.menu.name || 'Imported Menu',
+            menuTheme: data.menu.theme || '',
+            courses: (data.menu.courses || []).map((c, i) => ({
+              ...makeCourse(i + 1),
+              courseName: c.courseName || `Course ${i + 1}`,
+              dishName: c.dishName || '',
+              description: c.description || '',
+              ingredients: c.ingredients || [],
+              notes: c.notes || '',
+            })),
+            groceries: (data.menu.groceries || []).map(g => ({
+              id: genId(),
+              name: g.name,
+              bought: g.bought || false,
+            })),
+          });
+        } catch (err) {
+          reject(err);
+        }
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  });
+}
+
 // ─── Pollinations API (fixed) ────────────────────────────────────────────────
 
 function buildImageUrl(prompt, seed) {
@@ -543,7 +617,7 @@ function CourseCard({ course, onUpdate, onRemove, onMoveUp, onMoveDown, isFirst,
 
 // ─── Menu Editor ──────────────────────────────────────────────────────────────
 
-function MenuEditor({ roomId, menuName, menuTheme, courses, groceries, peers, saveId, onUpdateMenuName, onUpdateMenuTheme, onAddCourse, onUpdateCourse, onRemoveCourse, onMoveCourse, onAddGroceries, onToggleGrocery, onRemoveGrocery, onSaveMenu, C }) {
+function MenuEditor({ roomId, menuName, menuTheme, courses, groceries, peers, saveId, onUpdateMenuName, onUpdateMenuTheme, onAddCourse, onUpdateCourse, onRemoveCourse, onMoveCourse, onAddGroceries, onToggleGrocery, onRemoveGrocery, onSaveMenu, onImportMenu, C }) {
   const [copied, setCopied] = useState(false);
   const [saveMsg, setSaveMsg] = useState('');
 
@@ -560,6 +634,16 @@ function MenuEditor({ roomId, menuName, menuTheme, courses, groceries, peers, sa
     setTimeout(() => setSaveMsg(''), 2000);
   };
 
+  const handleExport = () => {
+    exportMenuAsJson({ menuName, menuTheme, courses, groceries });
+  };
+
+  const handleImport = () => {
+    importMenuFromJson()
+      .then(data => onImportMenu(data))
+      .catch(() => {});
+  };
+
   return (
     <div style={{ minHeight: '100vh', background: C.bg, padding: '28px 20px' }}>
       <div style={{ maxWidth: 960, margin: '0 auto' }}>
@@ -569,9 +653,15 @@ function MenuEditor({ roomId, menuName, menuTheme, courses, groceries, peers, sa
             <div style={{ width: 10, height: 10, borderRadius: '50%', background: peers > 1 ? '#27ae60' : C.muted }} />
             <span style={{ fontSize: 13, color: C.muted }}>{peers} collaborator{peers !== 1 ? 's' : ''} online</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
             <button onClick={handleSave} style={{ ...btn(C.gold, '#fff'), padding: '5px 14px' }}>
               {saveMsg || 'Save Menu'}
+            </button>
+            <button onClick={handleExport} style={{ ...btn(C.green, '#fff'), padding: '5px 14px' }}>
+              Export JSON
+            </button>
+            <button onClick={handleImport} style={{ ...btn(C.accent, '#fff'), padding: '5px 14px' }}>
+              Import JSON
             </button>
             <span style={{ fontSize: 12, color: C.muted }}>Room:</span>
             <code style={{ fontSize: 13, background: C.accentLight, color: C.accent, padding: '4px 10px', borderRadius: 6, fontWeight: 600 }}>{roomId}</code>
@@ -884,6 +974,18 @@ function TastingMenuApp() {
     setSaveId(id);
   }, [saveId, menuName, menuTheme, courses, groceries]);
 
+  const handleImportMenu = useCallback((data) => {
+    setMenuName(data.menuName);
+    setMenuTheme(data.menuTheme);
+    setCourses(data.courses);
+    setGroceries(data.groceries);
+    setSaveId(null);
+    syncKey('menuName', data.menuName);
+    syncKey('menuTheme', data.menuTheme);
+    syncKey('courses', data.courses);
+    syncKey('groceries', data.groceries);
+  }, [syncKey]);
+
   const updateMenuName = (v) => { setMenuName(v); syncKey('menuName', v); };
   const updateMenuTheme = (v) => { setMenuTheme(v); syncKey('menuTheme', v); };
 
@@ -999,6 +1101,7 @@ function TastingMenuApp() {
       onToggleGrocery={toggleGrocery}
       onRemoveGrocery={removeGrocery}
       onSaveMenu={handleSaveMenu}
+      onImportMenu={handleImportMenu}
       C={C}
     />
   );

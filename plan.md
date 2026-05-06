@@ -94,7 +94,7 @@ A personal culinary website where Aaron can design tasting menus collaboratively
 
 - [ ] Responsive layout improvements for mobile/tablet
 - [ ] Export menu as PDF (printable tasting menu card)
-- [ ] Export menu as JSON for saving/loading
+- [x] Export menu as JSON for saving/loading
 - [ ] Drag-and-drop course reordering
 - [ ] Course type presets (amuse-bouche, appetizer, intermezzo, main, dessert, mignardise)
 - [x] Dark mode support
